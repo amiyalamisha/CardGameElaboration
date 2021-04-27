@@ -1,6 +1,6 @@
 randomize();		// makes each run different
 
-show_debug_message(global.current_phase);
+//show_debug_message(global.current_phase);
 
 switch(global.current_phase){
 	case global.phase_dealing:
@@ -174,6 +174,7 @@ switch(global.current_phase){
 					
 					if(count <=0){
 						computer_draw_allowed = true;
+						computer_draw = true;
 						global.current_phase = global.phase_draw;
 					}
 					timer_wait = 0;
@@ -199,6 +200,7 @@ switch(global.current_phase){
 					}
 					else{
 						computer_draw_allowed = true;
+						computer_draw = true;
 						global.current_phase = global.phase_draw;
 					}
 				
@@ -214,11 +216,12 @@ switch(global.current_phase){
 	case global.phase_draw:
 		
 		timer_wait++;
-		
-		if(timer_wait > 40){
+		//show_debug_message(timer_wait);
+		if(timer_wait == 40){
+			show_debug_message(global.current_phase);
 			if(computer_draw && computer_draw_allowed){
 				var card = deck[| ds_list_size(deck)-1];	// the card being taken out at the end of the deck
-			
+				
 				// edits lists
 				ds_list_delete(deck, ds_list_size(deck)-1);
 				ds_list_add(hand_computer, card);
@@ -231,14 +234,12 @@ switch(global.current_phase){
 				}
 				
 				card.dealt = true;
-			
+			//	show_debug_message(global.current_phase);
 				computer_draw = false;
 				computer_draw_allowed = false;
 				global.current_phase = global.phase_computer_chooses;
 			}
-		}
-		
-		if(timer_wait > 40){
+			
 			if(player_draw_allowed && !beginSetup){
 				var card = deck[| ds_list_size(deck)-1];	// the card being taken out at the end of the deck
 			
@@ -259,8 +260,8 @@ switch(global.current_phase){
 				player_draw_allowed = false;
 				global.current_phase = global.phase_player_chooses;
 			}
+			timer_wait = 0;
 		}
-		timer_wait = 0;
 		
 	break;
 	
