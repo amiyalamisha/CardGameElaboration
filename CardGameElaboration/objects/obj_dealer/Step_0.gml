@@ -114,6 +114,9 @@ switch(global.current_phase){
 	case global.phase_player_chooses:
 	
 		// player selecting a card
+		
+		timer_wait++;
+		
 		if(topCard != noone){
 			for(i = 0; i < ds_list_size(hand_player); i++){
 				if(topCard.color == hand_player[| i].color){
@@ -140,6 +143,22 @@ switch(global.current_phase){
 				card.faceUp = true;
 				
 				clickAllowed = false;
+				timer_wait = 0;
+				
+				if(topCard != noone && timer_wait > 60){
+					count = 0;
+					for(i = 0; i < ds_list_size(hand_player); i++){
+						if(topCard.color == hand_player[| i].color){
+							count++
+						}
+					}
+					
+					if(count <=0){
+						computer_draw_allowed = true;
+						global.current_phase = global.phase_draw;
+					}
+					timer_wait = 0;
+				}
 			}
 			else if(global.selected_card != noone){
 				var select = ds_list_find_index(hand_player, global.selected_card);
@@ -174,6 +193,8 @@ switch(global.current_phase){
 	break;
 	
 	case global.phase_draw:
+		
+		timer_wait++;
 		
 		if(computer_draw || computer_draw_allowed){
 			var card = deck[| ds_list_size(deck)-1];	// the card being taken out at the end of the deck
