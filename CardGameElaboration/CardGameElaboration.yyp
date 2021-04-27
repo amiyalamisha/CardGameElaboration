@@ -1,5 +1,6 @@
 {
   "resources": [
+    {"id":{"name":"obj_instructions","path":"objects/obj_instructions/obj_instructions.yy",},"order":4,},
     {"id":{"name":"spr_rice","path":"sprites/spr_rice/spr_rice.yy",},"order":18,},
     {"id":{"name":"spr_beans","path":"sprites/spr_beans/spr_beans.yy",},"order":21,},
     {"id":{"name":"spr_patty","path":"sprites/spr_patty/spr_patty.yy",},"order":3,},
@@ -10,11 +11,16 @@
     {"id":{"name":"spr_back","path":"sprites/spr_back/spr_back.yy",},"order":0,},
     {"id":{"name":"spr_bread","path":"sprites/spr_bread/spr_bread.yy",},"order":6,},
     {"id":{"name":"snd_player_win","path":"sounds/snd_player_win/snd_player_win.yy",},"order":0,},
+    {"id":{"name":"fnt_title","path":"fonts/fnt_title/fnt_title.yy",},"order":1,},
+    {"id":{"name":"rm_start","path":"rooms/rm_start/rm_start.yy",},"order":2,},
     {"id":{"name":"snd_player_lose","path":"sounds/snd_player_lose/snd_player_lose.yy",},"order":1,},
     {"id":{"name":"obj_dealer","path":"objects/obj_dealer/obj_dealer.yy",},"order":1,},
     {"id":{"name":"snd_card_dealt","path":"sounds/snd_card_dealt/snd_card_dealt.yy",},"order":2,},
+    {"id":{"name":"rm_instructions","path":"rooms/rm_instructions/rm_instructions.yy",},"order":1,},
     {"id":{"name":"obj_card","path":"objects/obj_card/obj_card.yy",},"order":0,},
+    {"id":{"name":"obj_startscreen","path":"objects/obj_startscreen/obj_startscreen.yy",},"order":3,},
     {"id":{"name":"spr_spinich","path":"sprites/spr_spinich/spr_spinich.yy",},"order":19,},
+    {"id":{"name":"fnt_instructions","path":"fonts/fnt_instructions/fnt_instructions.yy",},"order":2,},
     {"id":{"name":"spr_lettuce","path":"sprites/spr_lettuce/spr_lettuce.yy",},"order":8,},
     {"id":{"name":"spr_shrimp","path":"sprites/spr_shrimp/spr_shrimp.yy",},"order":12,},
     {"id":{"name":"obj_deck_place","path":"objects/obj_deck_place/obj_deck_place.yy",},"order":2,},
@@ -43,6 +49,8 @@
     "children": [],
   },
   "RoomOrderNodes": [
+    {"roomId":{"name":"rm_start","path":"rooms/rm_start/rm_start.yy",},},
+    {"roomId":{"name":"rm_instructions","path":"rooms/rm_instructions/rm_instructions.yy",},},
     {"roomId":{"name":"rm_game","path":"rooms/rm_game/rm_game.yy",},},
   ],
   "Folders": [

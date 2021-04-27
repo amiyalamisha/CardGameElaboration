@@ -340,6 +340,11 @@ switch(global.current_phase){
 					playedcard_player = noone;
 				}
 			}
+			timer_wait = 0;
+		}
+		
+		if(timer_wait > 40){
+			// end blah
 		}
 	
 	

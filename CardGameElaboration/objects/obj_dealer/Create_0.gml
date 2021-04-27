@@ -78,7 +78,7 @@ player_hand_Y = room_height - 90;
 
 discardX = room_width - deckX;
 discard_computer_Y = computer_hand_Y + 100;
-discard_player_Y = player_hand_Y + 100;
+discard_player_Y = player_hand_Y - 100;
 
 //setup deck of cards, of size deck_size
 colorCount = 0;
