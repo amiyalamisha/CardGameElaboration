@@ -5,7 +5,7 @@ faceUp = false;
 type = global.vegtable;
 dealt = false;
 color = global.blue;
-draw = false;
+//draw = false;
 
 // starting move vars
 movetoX = obj_dealer.deckX;

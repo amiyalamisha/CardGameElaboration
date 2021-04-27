@@ -16,10 +16,10 @@ if(global.current_phase == global.phase_player_chooses && faceUp && dealt){
 	}
 }
 
-if(global.current_phase == global.phase_player_chooses && faceUp == false && dealt == false){
-	if(ds_list_find_index(obj_dealer.deck,id) >= 0){
-		// sets to the id of the instance
-		global.selected_card = id;
-		draw = true;
-	}
-}
+//if(global.current_phase == global.phase_player_chooses && faceUp == false && dealt == false){
+//	if(ds_list_find_index(obj_dealer.deck,id) >= 0){
+//		// sets to the id of the instance
+//		global.selected_card = id;
+//		draw = true;
+//	}
+//}

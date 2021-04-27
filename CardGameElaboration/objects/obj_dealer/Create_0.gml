@@ -44,13 +44,15 @@ topCard = noone;
 computer_draw = false;
 player_draw_allowed = false;
 computer_draw_allowed = false;
+
 beginSetup = true;
+clicked = false;
+clickAllowed = true;
 
 // all my lists
 deck = ds_list_create();
 hand_player = ds_list_create();
 hand_computer = ds_list_create();
-discard_pile = ds_list_create();
 center_pile = ds_list_create();
 computer_pile = ds_list_create();
 player_pile = ds_list_create();

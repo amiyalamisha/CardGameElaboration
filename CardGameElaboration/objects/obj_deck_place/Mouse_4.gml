@@ -1,0 +1,1 @@
+obj_dealer.clicked = true;

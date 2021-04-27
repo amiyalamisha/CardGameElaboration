@@ -95,6 +95,7 @@ switch(global.current_phase){
 		// a little delay before letting player choose their card
 		if(timer_wait == 60){
 			timer_wait = 0;
+			clickAllowed = true;
 			
 			if(playedcard_computer.type = global.finishing_carbs){
 				global.current_phase = global.phase_result;
@@ -114,41 +115,33 @@ switch(global.current_phase){
 	
 		// player selecting a card
 		if(topCard != noone){
-			count = 0;
 			for(i = 0; i < ds_list_size(hand_player); i++){
 				if(topCard.color == hand_player[| i].color){
-					count++
+					clickAllowed = false;
+					clicked = false;
 				}
-			}
-			if(count > 0){
-				player_draw_allowed = false;
-			}
-			else{
-				player_draw_allowed = true;
 			}
 		}
 		
 		if(mouse_check_button_pressed(mb_left)){
-			if(obj_card.draw && player_draw_allowed){
-				var drawCard = ds_list_find_index(deck, global.selected_card);
+			if(clickAllowed && clicked){
+				var card = deck[| ds_list_size(deck)-1];	// the card being taken out at the end of the deck
+			
+				// edits lists
+				ds_list_delete(deck, ds_list_size(deck)-1);
+				ds_list_add(hand_player, card);
 				
-				ds_list_add(hand_player, global.selected_card);
-				ds_list_delete(deck, drawCard);
-				
-				global.selected_card.movetoX = player_hand_X + hand_spacing * ds_list_size(hand_player);
-				global.selected_card.movetoY = player_hand_Y;
-				center_deck_Y += 2;
-				
-				global.selected_card.faceUp = true;
-				global.selected_card.dealt = true;
+				// code to move card visually
+				card.movetoX = player_hand_X + hand_spacing * ds_list_size(hand_player);
+				card.movetoY = player_hand_Y;
 				audio_play_sound(snd_card_dealt, 0, 0);		// moving card sound
 				
-				global.selected_card = noone;		// reset's player's selected card variable
+				card.dealt = true;
+				card.faceUp = true;
 				
-				global.current_phase = global.phase_draw;
-				timer_wait = 0;	
+				clickAllowed = false;
 			}
-			else if(global.selected_card != noone && !obj_card.draw){
+			else if(global.selected_card != noone){
 				var select = ds_list_find_index(hand_player, global.selected_card);
 				
 				if(global.selected_card.color == topCard.color){
@@ -174,9 +167,8 @@ switch(global.current_phase){
 					beginSetup = false;
 					global.selected_card = noone;		// reset's player's selected card variable
 				}
-				
-				timer_wait = 0;						// resets waiting timer
 			}
+			timer_wait = 0;						// resets waiting timer
 		}
 	
 	break;
@@ -191,9 +183,15 @@ switch(global.current_phase){
 			ds_list_add(hand_computer, card);
 				
 			// code to move card visually
-			card.movetoX = computer_hand_X + hand_spacing * ds_list_size(hand_computer);
-			card.movetoY = computer_hand_Y;
-			audio_play_sound(snd_card_dealt, 0, 0);		// moving card sound
+			for(i = 0; i < ds_list_size(hand_computer); i++){
+				hand_computer[| i].movetoX = computer_hand_X + hand_spacing * (i + 1);
+				hand_computer[| i].movetoY = computer_hand_Y;
+				audio_play_sound(snd_card_dealt, 0, 0);
+			}
+			
+			//card.movetoX = computer_hand_X + hand_spacing * ds_list_size(hand_computer);
+			//card.movetoY = computer_hand_Y;
+			//audio_play_sound(snd_card_dealt, 0, 0);		// moving card sound
 				
 			card.dealt = true;
 			
@@ -202,11 +200,6 @@ switch(global.current_phase){
 			global.current_phase = global.phase_computer_chooses;
 		}
 		
-		if(obj_card.draw){
-			global.current_phase = global.phase_player_chooses;
-			obj_card.draw = false;
-			player_draw_allowed = false;
-		}
 		
 		if(player_draw_allowed && !beginSetup){
 			var card = deck[| ds_list_size(deck)-1];	// the card being taken out at the end of the deck
@@ -214,13 +207,20 @@ switch(global.current_phase){
 			// edits lists
 			ds_list_delete(deck, ds_list_size(deck)-1);
 			ds_list_add(hand_player, card);
-				
-			// code to move card visually
-			card.movetoX = player_hand_X + hand_spacing * ds_list_size(hand_player);
-			card.movetoY = player_hand_Y;
-			audio_play_sound(snd_card_dealt, 0, 0);		// moving card sound
-				
+			
 			card.dealt = true;
+			card.faceUp = true;
+			
+			// code to move card visually
+			for(i = 0; i < ds_list_size(hand_player); i++){
+				hand_player[| i].movetoX = player_hand_X + hand_spacing * (i + 1);
+				hand_player[| i].movetoY = player_hand_Y;
+				audio_play_sound(snd_card_dealt, 0, 0);		// moving card sound
+			}
+			
+			//card.movetoX = player_hand_X + hand_spacing * ds_list_size(hand_player);
+			//card.movetoY = player_hand_Y;
+			//audio_play_sound(snd_card_dealt, 0, 0);		// moving card sound
 			
 			player_draw_allowed = false;
 			global.current_phase = global.phase_player_chooses;
