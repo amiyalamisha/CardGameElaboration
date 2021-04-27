@@ -1,6 +1,6 @@
 randomize();		// makes each run different
 
-//show_debug_message(global.current_phase);
+show_debug_message(global.current_phase);
 
 switch(global.current_phase){
 	case global.phase_dealing:
@@ -54,15 +54,15 @@ switch(global.current_phase){
 			// chosing random card from computer's hand
 			if(topCard == noone){
 				do{
-					var play = irandom_range(0, ds_list_size(hand_computer)-1);
-				}until(hand_computer[| play].type != global.finishing_carbs);	// dont wanna use a finish card
+					playIndex = irandom_range(0, ds_list_size(hand_computer)-1);
+				}until(hand_computer[| playIndex].type != global.finishing_carbs);	// dont wanna use a finish card
 			}
 			else{
 				if(computer_draw_allowed){
 					count = 0;
 					for(i = 0; i < ds_list_size(hand_computer); i++){
 						if(topCard.color == hand_computer[| i].color){
-							var play = i;
+							playIndex = i;
 							count++;
 						}
 					
@@ -93,8 +93,8 @@ switch(global.current_phase){
 					player_draw_allowed = true;
 					global.current_phase = global.phase_draw;
 				}
-				else{
-					playedcard_computer = hand_computer[| play];
+				else if(playIndex != noone){
+					playedcard_computer = hand_computer[| playIndex];
 			
 					// moving card foward
 					playedcard_computer.movetoX = room_width/2;		// brings card to center
@@ -106,7 +106,8 @@ switch(global.current_phase){
 			
 					audio_play_sound(snd_card_dealt, 0, 0);		// moving card sound
 			
-					ds_list_delete(hand_computer, play);			// delete from computer's hand
+					ds_list_delete(hand_computer, playIndex);			// delete from computer's hand
+					playIndex = noone;
 				}
 			}
 		}
@@ -162,7 +163,6 @@ switch(global.current_phase){
 				card.faceUp = true;
 				
 				clickAllowed = false;
-				timer_wait = 0;
 				
 				if(topCard != noone && timer_wait > 60){
 					count = 0;
@@ -172,7 +172,8 @@ switch(global.current_phase){
 						}
 					}
 					
-					if(count <=0){
+					if(count <= 
+					0){
 						computer_draw_allowed = true;
 						computer_draw = true;
 						global.current_phase = global.phase_draw;
@@ -216,7 +217,7 @@ switch(global.current_phase){
 	case global.phase_draw:
 		
 		timer_wait++;
-		//show_debug_message(timer_wait);
+		
 		if(timer_wait == 40){
 			show_debug_message(global.current_phase);
 			if(computer_draw && computer_draw_allowed){
@@ -234,7 +235,7 @@ switch(global.current_phase){
 				}
 				
 				card.dealt = true;
-			//	show_debug_message(global.current_phase);
+			
 				computer_draw = false;
 				computer_draw_allowed = false;
 				global.current_phase = global.phase_computer_chooses;

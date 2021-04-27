@@ -41,6 +41,7 @@ score_computer = 0;
 //chosen cards
 playedcard_player = noone;
 playedcard_computer = noone;
+playIndex = noone; // computer selected card index
 
 topCard = noone;
 computer_draw = false;
