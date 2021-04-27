@@ -306,6 +306,7 @@ switch(global.current_phase){
 		if(timer_phase == 0 && timer_wait > 60){
 			if(playedcard_computer.type == global.finishing_carbs){
 				if(ds_list_size(center_pile) > 0){
+					winCard = playedcard_computer;
 					var discard_card = center_pile[| ds_list_size(center_pile)-1];
 				
 					ds_list_add(computer_pile, discard_card);
@@ -324,6 +325,7 @@ switch(global.current_phase){
 			}
 			else if(playedcard_player.type == global.finishing_carbs){
 				if(ds_list_size(center_pile) > 0){
+					winCard = playedcard_player;
 					var discard_card = center_pile[| ds_list_size(center_pile)-1];
 				
 					ds_list_add(player_pile, discard_card);
@@ -340,11 +342,31 @@ switch(global.current_phase){
 					playedcard_player = noone;
 				}
 			}
+			
+			switch(winCard.color){
+				case global.blue: blueDis++; break;
+				case global.green: greenDis++; break;
+				case global.yellow: yellowDis++; break;
+			}
+			winCard = noone;
+			
 			timer_wait = 0;
 		}
 		
-		if(timer_wait > 40){
-			// end blah
+		if(timer_wait > 60){
+			if(blueDis >=2 && greenDis >=2 && yellowDis >=2){
+				if(score_computer > score_player){
+					room_goto(rm_lose);
+				}
+				else if(score_player > score_computer){
+					room_goto(rm_win);
+				}
+			}
+			else{
+				computer_draw_allowed = true;
+				computer_draw = true;
+				global.current_phase = global.phase_draw;
+			}
 		}
 	
 	

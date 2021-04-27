@@ -70,6 +70,12 @@ center_deck_Y = room_height/2 - 2;
 
 hand_spacing = 90;
 
+// tracking wins
+winCard = noone;
+blueDis = 0;
+greenDis = 0;
+yellowDis = 0;
+
 computer_hand_X  = 30;
 computer_hand_Y = 90;
 
