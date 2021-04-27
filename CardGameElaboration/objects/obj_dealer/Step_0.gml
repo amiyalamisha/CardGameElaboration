@@ -1,5 +1,7 @@
 randomize();		// makes each run different
 
+show_debug_message(global.current_phase);
+
 switch(global.current_phase){
 	case global.phase_dealing:
 	
@@ -56,39 +58,56 @@ switch(global.current_phase){
 				}until(hand_computer[| play].type != global.finishing_carbs);	// dont wanna use a finish card
 			}
 			else{
-				count = 0;
-				for(i = 0; i < ds_list_size(hand_computer); i++){
-					if(topCard.color == hand_computer[| i].color){
-						var play = i;
-						count++;
-					}
+				if(computer_draw_allowed){
+					count = 0;
+					for(i = 0; i < ds_list_size(hand_computer); i++){
+						if(topCard.color == hand_computer[| i].color){
+							var play = i;
+							count++;
+						}
 					
-					if(count > 0){
-						computer_draw = false;
-					}
-					else{
-						computer_draw = true;
+						if(count > 0){
+							computer_draw = false;
+						}
+						else{
+							computer_draw = true;
+						}
 					}
 				}
 			}
 			
-			if(computer_draw){
+			if(computer_draw && computer_draw_allowed){
 				global.current_phase = global.phase_draw;
 			}
 			else{
-				playedcard_computer = hand_computer[| play];
+				if(topCard != noone){
+					count = 0;
+					for(i = 0; i < ds_list_size(hand_computer); i++){
+						if(topCard.color == hand_computer[| i].color){
+							count++
+						}
+					}
+				}
+				
+				if(count <= 0 && topCard != noone){
+					player_draw_allowed = true;
+					global.current_phase = global.phase_draw;
+				}
+				else{
+					playedcard_computer = hand_computer[| play];
 			
-				// moving card foward
-				playedcard_computer.movetoX = room_width/2;		// brings card to center
-				playedcard_computer.movetoY = center_deck_Y;
-				center_deck_Y += 2
+					// moving card foward
+					playedcard_computer.movetoX = room_width/2;		// brings card to center
+					playedcard_computer.movetoY = center_deck_Y;
+					center_deck_Y += 2
 			
-				playedcard_computer.faceUp = true;
-				ds_list_add(center_pile, playedcard_computer);
+					playedcard_computer.faceUp = true;
+					ds_list_add(center_pile, playedcard_computer);
 			
-				audio_play_sound(snd_card_dealt, 0, 0);		// moving card sound
+					audio_play_sound(snd_card_dealt, 0, 0);		// moving card sound
 			
-				ds_list_delete(hand_computer, play);			// delete from computer's hand
+					ds_list_delete(hand_computer, play);			// delete from computer's hand
+				}
 			}
 		}
 		
@@ -196,56 +215,52 @@ switch(global.current_phase){
 		
 		timer_wait++;
 		
-		if(computer_draw || computer_draw_allowed){
-			var card = deck[| ds_list_size(deck)-1];	// the card being taken out at the end of the deck
+		if(timer_wait > 40){
+			if(computer_draw && computer_draw_allowed){
+				var card = deck[| ds_list_size(deck)-1];	// the card being taken out at the end of the deck
 			
-			// edits lists
-			ds_list_delete(deck, ds_list_size(deck)-1);
-			ds_list_add(hand_computer, card);
+				// edits lists
+				ds_list_delete(deck, ds_list_size(deck)-1);
+				ds_list_add(hand_computer, card);
 				
-			// code to move card visually
-			for(i = 0; i < ds_list_size(hand_computer); i++){
-				hand_computer[| i].movetoX = computer_hand_X + hand_spacing * (i + 1);
-				hand_computer[| i].movetoY = computer_hand_Y;
-				audio_play_sound(snd_card_dealt, 0, 0);
+				// code to move card visually
+				for(i = 0; i < ds_list_size(hand_computer); i++){
+					hand_computer[| i].movetoX = computer_hand_X + hand_spacing * (i + 1);
+					hand_computer[| i].movetoY = computer_hand_Y;
+					audio_play_sound(snd_card_dealt, 0, 0);
+				}
+				
+				card.dealt = true;
+			
+				computer_draw = false;
+				computer_draw_allowed = false;
+				global.current_phase = global.phase_computer_chooses;
 			}
-			
-			//card.movetoX = computer_hand_X + hand_spacing * ds_list_size(hand_computer);
-			//card.movetoY = computer_hand_Y;
-			//audio_play_sound(snd_card_dealt, 0, 0);		// moving card sound
-				
-			card.dealt = true;
-			
-			computer_draw = false;
-			computer_draw_allowed = false;
-			global.current_phase = global.phase_computer_chooses;
 		}
 		
-		
-		if(player_draw_allowed && !beginSetup){
-			var card = deck[| ds_list_size(deck)-1];	// the card being taken out at the end of the deck
+		if(timer_wait > 40){
+			if(player_draw_allowed && !beginSetup){
+				var card = deck[| ds_list_size(deck)-1];	// the card being taken out at the end of the deck
 			
-			// edits lists
-			ds_list_delete(deck, ds_list_size(deck)-1);
-			ds_list_add(hand_player, card);
+				// edits lists
+				ds_list_delete(deck, ds_list_size(deck)-1);
+				ds_list_add(hand_player, card);
 			
-			card.dealt = true;
-			card.faceUp = true;
+				card.dealt = true;
+				card.faceUp = true;
 			
-			// code to move card visually
-			for(i = 0; i < ds_list_size(hand_player); i++){
-				hand_player[| i].movetoX = player_hand_X + hand_spacing * (i + 1);
-				hand_player[| i].movetoY = player_hand_Y;
-				audio_play_sound(snd_card_dealt, 0, 0);		// moving card sound
+				// code to move card visually
+				for(i = 0; i < ds_list_size(hand_player); i++){
+					hand_player[| i].movetoX = player_hand_X + hand_spacing * (i + 1);
+					hand_player[| i].movetoY = player_hand_Y;
+					audio_play_sound(snd_card_dealt, 0, 0);		// moving card sound
+				}
+			
+				player_draw_allowed = false;
+				global.current_phase = global.phase_player_chooses;
 			}
-			
-			//card.movetoX = player_hand_X + hand_spacing * ds_list_size(hand_player);
-			//card.movetoY = player_hand_Y;
-			//audio_play_sound(snd_card_dealt, 0, 0);		// moving card sound
-			
-			player_draw_allowed = false;
-			global.current_phase = global.phase_player_chooses;
 		}
+		timer_wait = 0;
 		
 	break;
 	

@@ -33,6 +33,8 @@ timer_wait = 0;
 rounds = 0;
 round_done = false;
 
+count = 0;
+
 score_player = 0;
 score_computer = 0;
 
@@ -43,7 +45,7 @@ playedcard_computer = noone;
 topCard = noone;
 computer_draw = false;
 player_draw_allowed = false;
-computer_draw_allowed = false;
+computer_draw_allowed = true;
 
 beginSetup = true;
 clicked = false;
